@@ -34,7 +34,7 @@ digits.forEach(digit =>
         a = +inputArr[0];
 
         if(inputArr.length > 2) {
-            b = +inputArr[inputArr.length-1];
+            b = inputArr[inputArr.length-1];
         }
 
         updateDisplay();
@@ -43,6 +43,7 @@ digits.forEach(digit =>
 
 operators.forEach(operator =>
     operator.addEventListener('click', e => {
+        if(!rawInput) rawInput += 0;
         rawInput += ` ${e.target.id} `;
 
         inputArr = cleanUpInput(rawInput);
@@ -55,6 +56,7 @@ operators.forEach(operator =>
 equal.addEventListener('click', () => {
     operate();
     display.textContent = answer;
+    a = answer;
     }
 );
 
@@ -72,5 +74,5 @@ function updateDisplay() {
 }
 
 function operate() {
-   answer = methods[op](a,b);
+   answer = methods[op](a, +b);
 }
