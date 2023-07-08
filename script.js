@@ -5,12 +5,15 @@ const operators = document.querySelectorAll('button.operator');
 const equal = document.querySelector('button.equal');
 
 let a = 0;
-let b = 0;
+let b = "";
 let op = "";
+let answer = 0;
 
 let rawInput = "";
+let processedInput = "";
+let inputArr = [];
 
-display.textContent = a;
+display.textContent = answer;
 
 const methods = {
     "+": function(a, b) {
@@ -25,21 +28,49 @@ const methods = {
 
 digits.forEach(digit => 
     digit.addEventListener('click', e => {
-        a = e.target.id;
-        rawInput += a;
+        rawInput += e.target.id;
+
+        inputArr = cleanUpInput(rawInput);
+        a = +inputArr[0];
+
+        if(inputArr.length > 2) {
+            b = +inputArr[inputArr.length-1];
+        }
+
         updateDisplay();
     })
 );
 
 operators.forEach(operator =>
     operator.addEventListener('click', e => {
-        op = e.target.id;
-        rawInput += op;
+        rawInput += ` ${e.target.id} `;
+
+        inputArr = cleanUpInput(rawInput);
+        op = inputArr[inputArr.length-2];
+        
         updateDisplay();
     })
 );
 
+equal.addEventListener('click', () => {
+    operate();
+    display.textContent = answer;
+    }
+);
+
+
+
+function cleanUpInput(input) {
+    let arr = input.split(" ");
+    console.log(arr);
+    return arr;
+}
 
 function updateDisplay() {
-    display.textContent = rawInput;
+    processedInput = `${a} ${op} ${b}`;
+    display.textContent = processedInput;
+}
+
+function operate() {
+   answer = methods[op](a,b);
 }
