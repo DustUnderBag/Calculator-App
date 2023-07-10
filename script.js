@@ -3,6 +3,7 @@ const buttons = document.querySelectorAll('button');
 const digits = document.querySelectorAll('button.digit');
 const operators = document.querySelectorAll('button.operator');
 const equal = document.querySelector('button.equal');
+const clear = document.querySelector('button.clear');
 
 let a = 0;
 let b = "";
@@ -30,7 +31,7 @@ digits.forEach(digit =>
     digit.addEventListener('click', e => {
         rawInput += e.target.id;
 
-        inputArr = cleanUpInput(rawInput);
+        inputArr = organizeInput(rawInput);
         a = +inputArr[0];
 
         if(inputArr.length > 2) {
@@ -41,12 +42,15 @@ digits.forEach(digit =>
     })
 );
 
+clear.addEventListener('click', clearAll);
+
 operators.forEach(operator =>
     operator.addEventListener('click', e => {
-        if(!rawInput) rawInput += 0;
+        if(!rawInput) rawInput += 0; //If no number input before operator, first number becomes 0.
+
         rawInput += ` ${e.target.id} `;
 
-        inputArr = cleanUpInput(rawInput);
+        inputArr = organizeInput(rawInput);
         op = inputArr[inputArr.length-2];
         
         updateDisplay();
@@ -54,6 +58,7 @@ operators.forEach(operator =>
 );
 
 equal.addEventListener('click', () => {
+    if(!op) op = "+";
     operate();
     display.textContent = answer;
     a = answer;
@@ -62,7 +67,7 @@ equal.addEventListener('click', () => {
 
 
 
-function cleanUpInput(input) {
+function organizeInput(input) {
     let arr = input.split(" ");
     console.log(arr);
     return arr;
@@ -75,4 +80,17 @@ function updateDisplay() {
 
 function operate() {
    answer = methods[op](a, +b);
+   console.log("Answer: " + answer);
+}
+
+function clearAll() {
+    a = 0;
+    b = "";
+    op = "";
+    rawInput = "";
+    inputArr.length = 0;
+    updateDisplay();
+
+    console.log(`Cleared, rawInput: ${rawInput}, inputArr: ${rawInput} 
+                 a: ${a}, b: ${b}, op: ${op}.`);
 }
