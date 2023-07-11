@@ -47,6 +47,7 @@ clear.addEventListener('click', clearAll);
 operators.forEach(operator =>
     operator.addEventListener('click', e => {
         if(!rawInput) rawInput += 0; //If no number input before operator, first number becomes 0.
+        if(a === "Infinity") a = 0;
 
         rawInput += ` ${e.target.id} `;
 
@@ -57,15 +58,7 @@ operators.forEach(operator =>
     })
 );
 
-equal.addEventListener('click', () => {
-    if(!op) op = "+";
-    operate();
-    display.textContent = answer;
-    a = answer;
-    }
-);
-
-
+equal.addEventListener('click', operate);
 
 function organizeInput(input) {
     let arr = input.split(" ");
@@ -79,8 +72,21 @@ function updateDisplay() {
 }
 
 function operate() {
-   answer = methods[op](a, +b);
-   console.log("Answer: " + answer);
+    if(!op) op = "+"; //default op to + if op is not input yet.
+
+    if(b === 0 && op === "/") answer = "Infinity, ⚠️Dividing by 0 not possible!"; //avoid divided by 0.
+
+    answer = methods[op](a, +b);
+    display.textContent = answer;
+
+    a = answer;
+    rawInput = String(a);    
+    inputArr.length = 0;
+    organizeInput(rawInput);
+    b = "";
+    op = "";
+
+    console.log("Answer: " + answer);
 }
 
 function clearAll() {
@@ -94,3 +100,14 @@ function clearAll() {
     console.log(`Cleared, rawInput: ${rawInput}, inputArr: ${rawInput} 
                  a: ${a}, b: ${b}, op: ${op}.`);
 }
+
+
+
+
+function CalcPair(a, b, op) {
+   this.a = a;
+   this.b = b;
+   this.op = op;
+   this.answer = methods[this.op](a, +b);
+}
+//console.log(new CalcPair(15,20,"*"));
