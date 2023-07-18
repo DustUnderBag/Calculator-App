@@ -1,9 +1,8 @@
 const display = document.querySelector('div#display');
-const buttons = document.querySelectorAll('button');
-const digits = document.querySelectorAll('button.digit');
-const operators = document.querySelectorAll('button.operator');
-const equal = document.querySelector('button.equal');
-const clear = document.querySelector('button.clear');
+const digitBtn = document.querySelectorAll('button.digit');
+const opBtn = document.querySelectorAll('button.operator');
+const equalBtn = document.querySelector('button.equal');
+const clearBtn = document.querySelector('button.clear');
 
 let a = 0;
 let b = "";
@@ -28,7 +27,7 @@ const methods = {
 };
 
 
-digits.forEach(digit => 
+digitBtn.forEach(digit => 
     digit.addEventListener('click', e => {
         if(a && answer && !b && !op) {
             clearAll();
@@ -46,9 +45,9 @@ digits.forEach(digit =>
     })
 );
 
-clear.addEventListener('click', clearAll);
+clearBtn.addEventListener('click', clearAll);
 
-operators.forEach(operator =>
+opBtn.forEach(operator =>
     operator.addEventListener('click', e => {
 
         if(!rawInput) rawInput += 0; //If no number input before operator, first number becomes 0.
@@ -67,7 +66,7 @@ operators.forEach(operator =>
     })
 );
 
-equal.addEventListener('click', operate);
+equalBtn.addEventListener('click', operate);
 
 function inputOp(e) {
     op = e.target.id;
