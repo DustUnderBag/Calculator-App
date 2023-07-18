@@ -30,12 +30,15 @@ const methods = {
 
 digits.forEach(digit => 
     digit.addEventListener('click', e => {
+        if(a && answer && !b && !op) {
+            clearAll();
+        }
         rawInput += e.target.id;
 
         inputArr = organizeInput(rawInput);
         a = +inputArr[0];
 
-        if(inputArr.length > 2) {
+        if(inputArr.length > 2 || a && op) { //if a, op exist already.
             b = inputArr[inputArr.length-1];
         }
 
@@ -51,9 +54,10 @@ operators.forEach(operator =>
         if(!rawInput) rawInput += 0; //If no number input before operator, first number becomes 0.
         if(a === "Infinity") a = 0;
 
-        if(b) { //operate for answer if the current calculation is followed by another op input.
+        if(a && b && op) { //operate for answer if the current calculation is followed by another op input.
             operate();
             op = e.target.id;
+            rawInput += " " + op + " ";
             inputArr = organizeInput(rawInput);
             updateDisplay();
             return;
@@ -106,6 +110,7 @@ function clearAll() {
     a = 0;
     b = "";
     op = "";
+    answer = "";
     rawInput = "";
     inputArr.length = 0;
     updateDisplay();
