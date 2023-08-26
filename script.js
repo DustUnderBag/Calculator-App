@@ -9,15 +9,20 @@ let b = "";
 let op = "";
 let answer = 0;
 
+//Raw string input by user.
 let rawInput = "";
+
+//
 let processedInput = "";
+
+
 let inputArr = [];
 
 display.textContent = answer;
 
 const methods = {
     "+": function(a, b) {
-        return a +  b;
+        return a + b;
     },
     "-"(a, b) {
         return a -b;
@@ -26,50 +31,68 @@ const methods = {
     "/": (a, b) => a / b,
 };
 
-
-digitBtn.forEach(digit => 
-    digit.addEventListener('click', e => {
-        if(a && answer && !b && !op) {
-            clearAll();
-        }
-        rawInput += e.target.id;
-
-        inputArr = organizeInput(rawInput);
-        a = +inputArr[0];
-
-        if(inputArr.length > 2 || a && op) { //if a, op exist already.
-            b = inputArr[inputArr.length-1];
-        }
-
-        updateDisplay();
-    })
-);
-
+//Mouse click handler
+digitBtn.forEach(digit => digit.addEventListener('click', e => inputDigit(e.target.id)));
+opBtn.forEach(operator => operator.addEventListener('click', e => inputOp(e.target.id)));
+equalBtn.addEventListener('click', operate);
 clearBtn.addEventListener('click', clearAll);
 
-opBtn.forEach(operator =>
-    operator.addEventListener('click', e => {
+//Keydown handler
+window.addEventListener('keydown', e => { 
+    let key = e.key;
 
-        if(!rawInput) rawInput += 0; //If no number input before operator, first number becomes 0.
-        if(a === "Infinity") a = 0;
+    //Regular Expressions
+    const numberPattern = /\d+/;
+    const opPattern = /[+*/-]/;
 
-        if(a && b && op) { //operate for answer if the current calculation is followed by another op input.
-            operate();
-            op = e.target.id;
-            rawInput += " " + op + " ";
-            inputArr = organizeInput(rawInput);
-            updateDisplay();
-            return;
-        }
-        inputOp(e);
+    //Digits
+    if(numberPattern.test(key)) inputDigit(key);
 
-    })
-);
+    //Operator
+    if(opPattern.test(key)) inputOp(key);
 
-equalBtn.addEventListener('click', operate);
+    //Equals
+    if(key === "=" || key === "Enter") operate();
 
-function inputOp(e) {
-    op = e.target.id;
+    //Clear
+    if(key === "Escape") clearAll();
+});
+
+
+
+function inputDigit(input) {
+    //Start with new first number is previous number pair was calculated with equalBtn.
+    if(a && answer && !b && !op) clearAll();
+    
+    rawInput += input;
+    inputArr = organizeInput(rawInput);
+
+    a = +inputArr[0];
+
+    if(inputArr.length > 2 || a && op) { //if a, op exist already.
+        b = inputArr[inputArr.length-1];
+    }
+    updateDisplay();
+}
+
+
+function inputOp(input) {
+    //If no number input before operator, first number becomes 0.
+    if(!rawInput) rawInput += 0; 
+
+    if(a === "Infinity") a = 0;
+    
+    //operate for answer if the current calculation is followed by another op input.
+    if(a && b && op) { 
+        operate();
+        op = input;
+        rawInput += " " + op + " ";
+        inputArr = organizeInput(rawInput);
+        updateDisplay();
+        return;
+    }
+
+    op = input;
     rawInput += ` ${op} `;
     inputArr = organizeInput(rawInput);
     op = inputArr[inputArr.length-2];
@@ -117,8 +140,6 @@ function clearAll() {
     console.log(`Cleared, rawInput: ${rawInput}, inputArr: ${rawInput} 
                  a: ${a}, b: ${b}, op: ${op}.`);
 }
-
-
 
 
 function CalcData(a, b, op, answer) {
