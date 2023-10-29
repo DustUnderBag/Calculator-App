@@ -8,34 +8,43 @@
 
 <body>
     <h1>Calculator</h1>
-    <div id="calculaotr">
-        <div id="display"></div>
-        <div id="buttons">
-            <button class="digit" id="1">1</button>
-            <button class="digit" id="2">2</button>
-            <button class="digit" id="3">3</button>
-            <button class="digit" id="4">4</button>
-            <button class="digit" id="5">5</button>
-            <button class="digit" id="6">6</button>
-            <button class="digit" id="7">7</button>
-            <button class="digit" id="8">8</button>
-            <button class="digit" id="9">9</button>
-            <button class="digit" id="0">0</button>
-            <button class="operator" id="+">+</button>
-            <button class="operator" id="-">-</button>
-            <button class="operator" id="*">*</button>
-            <button class="operator" id="/">/</button>
+    <div id="calculator">
+        <div class="display"></div>
+        <div class="buttons">
+            <div class="row">
+                <button class="delete" id="Backspace">Delete</button>
+                <button class="clear" id="Escape">AC</button>
+            </div>
 
-            <button class="equal" id="=">=</button>
-            <button class="clear">Clear</button>
+            <div class="row">
+                <button class="digit" id="7">7</button>
+                <button class="digit" id="8">8</button>
+                <button class="digit" id="9">9</button>
+                <button class="operator" id="/">÷</button>
+            </div>
 
+            <div class="row">
+                <button class="digit" id="4">4</button>
+                <button class="digit" id="5">5</button>
+                <button class="digit" id="6">6</button>
+                <button class="operator" id="*">×</button>    
+            </div>
+
+            <div class="row">
+                <button class="digit" id="1">1</button>
+                <button class="digit" id="2">2</button>
+                <button class="digit" id="3">3</button>
+                <button class="operator" id="-">-</button>
+            </div>
+
+            <div class="row">
+                <button class="dot" id=".">.</button>
+                <button class="digit" id="0">0</button>
+                <button class="equal" id="=">=</button>
+                <button class="operator plus" id="+">+</button>
+            </div>
         </div>
-
-
-
     </div>
-
-
 
     <script src="./script.js"></script>
 </body>

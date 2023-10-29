@@ -1,3 +1,75 @@
 h1 {
     color:red;
+    text-align: center;
 }   
+
+* {
+    margin: 0;
+    border: none;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Lato', sans-serif;
+}
+
+div#calculator {
+    width: 400px;
+    height: 410px;
+    margin: 0 auto;
+}
+
+div.buttons {
+    width: 400px;
+    height: 400px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+
+div.row {
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    flex: 1;
+
+    display:flex;
+    gap: 3px;
+}
+
+button.digit-effect {
+    background: rgb(48, 48, 48);
+}
+
+button.equal-effect {
+    background-color: rgb(112, 112, 112);
+}
+
+button.fnc-effect {
+    background-color: #02a6f1d2;
+}
+
+button {
+    border: 3px transparent solid;
+    border-radius: 0.4rem;
+    font-size: 25px;
+
+    background-color: rgb(112, 112, 112);
+    color: white;
+
+    flex: 1;
+}
+
+
+.operator,
+.clear,
+.delete {
+    background-color: rgb(65, 65, 65);
+}
+
+.equal {
+    background-color: #00aeff;
+    color: black;
+}
+
