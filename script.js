@@ -43,6 +43,13 @@ window.addEventListener('keydown', e => {
     const key = e.key;
     const button = document.getElementById(key);
 
+    //Equal
+    if(key === "=" || key === "Enter") {
+        operate();
+        document.getElementById('=').classList.add('fnc-effect');
+    }
+    
+    if(!button) return;
 
     //Regular Expressions
     const numberPattern = /\d+/;
@@ -60,12 +67,6 @@ window.addEventListener('keydown', e => {
         button.classList.add('digit-effect');
     }
     
-    //Equals
-    if(key === "=" || key === "Enter") {
-        operate();
-        button.classList.add('equal-effect');
-    }
-
     //Operator
     if(opPattern.test(key)) {
         inputOp(key);
@@ -85,6 +86,17 @@ window.addEventListener('keydown', e => {
 
 });
 
+const allButtons = document.querySelectorAll('button');
+allButtons.forEach(button => 
+    button.addEventListener('transitionend', removeEffect));
+
+function removeEffect(e) {
+    if(e.propertyName !== "background-color") return;
+    //console.log(e);
+    this.classList.remove('digit-effect');
+    this.classList.remove('fnc-effect');
+    this.classList.remove('equal-effect');
+}
 
 function inputDigit(input) {
     //Start fresh if previous number pair was calculated with equalBtn.

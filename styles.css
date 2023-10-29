@@ -39,7 +39,7 @@ div.row {
 }
 
 button.digit-effect {
-    background: rgb(48, 48, 48);
+    background-color: rgb(65, 65, 65);
 }
 
 button.equal-effect {
@@ -57,15 +57,19 @@ button {
 
     background-color: rgb(112, 112, 112);
     color: white;
+    transition: background 0.05s ease-in;
 
     flex: 1;
 }
 
 
 .operator,
-.clear,
-.delete {
+.backspace {
     background-color: rgb(65, 65, 65);
+}
+
+.clear {
+    background-color: #9b3131;
 }
 
 .equal {
