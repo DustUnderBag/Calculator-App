@@ -40,50 +40,38 @@ clearBtn.addEventListener('click', clearAll);
 
 //Keydown handler
 window.addEventListener('keydown', e => { 
-    const key = e.key;
+    let key = e.key;
+    if(key === "Enter") key = "="; //Convert "Enter" to "=" so both can refer to equalBtn.
     const button = document.getElementById(key);
 
-    //Equal
-    if(key === "=" || key === "Enter") {
-        operate();
-        document.getElementById('=').classList.add('fnc-effect');
-    }
-    
-    if(!button) return;
+    if(!button) return; //Skip if entered key isn't correlated to existing buttons here.
 
     //Regular Expressions
     const numberPattern = /\d+/;
     const opPattern = /[+*/-]/;
 
+    //Input effects //If number OR dot is entered
+    numberPattern.test(key) || key === "."
+        ? button.classList.add('digit-effect')
+        : button.classList.add('fnc-effect');
+    
+    //Equal
+    if(key === "=" || key === "Enter") return operate();
+
     //Digits
-    if(numberPattern.test(key)) {
-        inputDigit(key);
-        button.classList.add('digit-effect');
-    }
+    if(numberPattern.test(key)) return inputDigit(key);
 
     //Dot
-    if(key === ".") {
-        inputDot(key);
-        button.classList.add('digit-effect');
-    }
+    if(key === ".") return inputDot(key);
     
     //Operator
-    if(opPattern.test(key)) {
-        inputOp(key);
-        button.classList.add('fnc-effect');
-    }
+    if(opPattern.test(key)) return inputOp(key);
 
     //Clear or Escape
-    if(key === "Escape") {
-        clearAll();
-        button.classList.add('fnc-effect');
-    };
+    if(key === "Escape") return clearAll();
 
     //Backspace or Delete
-    if(key === "Backspace") {
-        button.classList.add('fnc-effect');
-    }
-
+    if(key === "Backspace") return;
 });
 
 const allButtons = document.querySelectorAll('button');
@@ -96,6 +84,10 @@ function removeEffect(e) {
     this.classList.remove('digit-effect');
     this.classList.remove('fnc-effect');
     this.classList.remove('equal-effect');
+}
+
+function applyEffect(button) {
+    
 }
 
 function inputDigit(input) {
