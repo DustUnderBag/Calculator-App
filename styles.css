@@ -8,7 +8,7 @@ h1 {
     border: none;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Lato', sans-serif;
+    font-family: 'Roboto', 'Open Sans', 'Lato', sans-serif;
 }
 
 div#calculator {
@@ -19,15 +19,25 @@ div#calculator {
 
 div.display {
     border: 3px solid black;
-    height: 60px;
+    height: 5em;
     margin: 5px auto;
 }
 
 .display > div {
-    height: 25px;
-    margin: 2px 0px;
-    background-color: grey;
+    text-align: right;
+    padding: 10px;
 }
+
+.display .math {
+    height: 30%;
+    font-size: 1em;
+}
+
+.display .input {
+    height: 70%;
+    font-size: 2em;
+}
+
 
 div.buttons {
     width: 400px;

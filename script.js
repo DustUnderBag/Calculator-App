@@ -60,7 +60,7 @@ window.addEventListener('keydown', e => {
     if(numberPattern.test(key)) return inputDigit(key);
     
     //Dots
-    if(key === "." && dotEnabled) return inputDot();
+    if(key === ".") return inputDot();
 
     //Operator
     if(opPattern.test(key)) return inputOp(key);
@@ -69,7 +69,7 @@ window.addEventListener('keydown', e => {
     if(key === "Escape") return clearAll();
 
     //Backspace or Delete
-    if(key === "Backspace") return;
+    if(key === "Backspace") return removeLast();
 });
 
 //Remove Input Effect
@@ -101,6 +101,8 @@ function inputDigit(input) {
 
 function inputDot() {
     if(operated) clearAll();
+
+    if(rawInput.includes(".")) return; //Skip if decimal is already entered.
 
     dotEnabled = false;
 
@@ -171,6 +173,16 @@ function operate() {
     operated = true;
 
     console.log("Answer: " + answer);
+}
+
+function removeLast() {
+    rawInput = rawInput.slice(0, -1); //slice from pos 0 to the last 2nd character.
+    if(inputTarget === "a") {
+        a = rawInput;
+    } else {
+        b = rawInput;
+    }
+    updateInputDisplay();
 }
 
 function updateMathDisplay() {
