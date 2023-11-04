@@ -13,8 +13,20 @@ h1 {
 
 div#calculator {
     width: 400px;
-    height: 410px;
+    height: 500x;
     margin: 0 auto;
+}
+
+div.display {
+    border: 3px solid black;
+    height: 60px;
+    margin: 5px auto;
+}
+
+.display > div {
+    height: 25px;
+    margin: 2px 0px;
+    background-color: grey;
 }
 
 div.buttons {

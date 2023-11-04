@@ -1,4 +1,5 @@
-const display = document.querySelector('div.display');
+const inputDisplay = document.querySelector('.display > .input');
+const mathDisplay = document.querySelector('div.display > .math');
 const digitBtn = document.querySelectorAll('button.digit');
 const opBtn = document.querySelectorAll('button.operator');
 const equalBtn = document.querySelector('button.equal');
@@ -12,15 +13,12 @@ let answer = 0;
 let inputTarget = "a"; //Determine which data is being input, either a or b.
 
 let dotEnabled = true;
+let operated = false;
 
 //Raw string input by user
 let rawInput = "";
-let processedInput = "";
-
-//rawInput splitted into individual inputs
-let inputArr = [];
-
-display.textContent = answer;
+mathDisplay.textContent = "";
+inputDisplay.textContent = 0;
 
 const methods = {
     "+": function(a, b) {
@@ -60,10 +58,10 @@ window.addEventListener('keydown', e => {
 
     //Digits
     if(numberPattern.test(key)) return inputDigit(key);
-
-    //Dot
-    if(key === ".") return inputDot(key);
     
+    //Dots
+    if(key === "." && dotEnabled) return inputDot();
+
     //Operator
     if(opPattern.test(key)) return inputOp(key);
 
@@ -74,9 +72,11 @@ window.addEventListener('keydown', e => {
     if(key === "Backspace") return;
 });
 
+//Remove Input Effect
 const allButtons = document.querySelectorAll('button');
 allButtons.forEach(button => 
-    button.addEventListener('transitionend', removeEffect));
+    button.addEventListener('transitionend', removeEffect)
+);
 
 function removeEffect(e) {
     if(e.propertyName !== "background-color") return;
@@ -86,109 +86,131 @@ function removeEffect(e) {
     this.classList.remove('equal-effect');
 }
 
-function applyEffect(button) {
-    
-}
-
 function inputDigit(input) {
-    //Start fresh if previous number pair was calculated with equalBtn.
-    if(a && answer && !b && !op) clearAll();
-    if(+input === 0 && +a === 0) return;
+    if(operated) clearAll();
+
     rawInput += input;
-    inputArr = organizeInput(rawInput);
-
-    a = inputArr[0];
-
-    if(inputArr.length > 2 || a && op) { //if a, op exist already.
-        b = inputArr[inputArr.length-1];
+    if(inputTarget == "a") {
+        a = rawInput;
+    }else {
+        b = rawInput;
     }
-    updateDisplay();
+
+    updateInputDisplay();
 }
 
 function inputDot() {
-    if(!dotEnabled) return; //Does nothing if dot is NOT enabled.
+    if(operated) clearAll();
 
-    dotEnabled = false; //Switch off dotBtn.
-    rawInput += ".";
-    inputArr = organizeInput(rawInput);
+    dotEnabled = false;
 
-    a = inputArr[0];
+    if(rawInput === "") { //If user enter decimal to an empty rawInput, it becomes "0.".
+        rawInput += "0.";
+    }else {
+        rawInput += ".";
+    }    
 
-    if(inputArr.length > 2 || a && op) { //if a, op exist already.
-        b = inputArr[inputArr.length-1];
+    if(inputTarget == "a") {
+        a = rawInput;
+    }else {
+        b = rawInput;
     }
-    updateDisplay();
+
+    updateInputDisplay();
 }
 
 function inputOp(input) {
-    //If no number input before operator, first number becomes 0.
-    if(!rawInput) rawInput += 0; 
+    inputTarget = "b";
+    if(operated) {  
+        a = answer;
+        b = "";
+        operated = false; //reverts to non-operated state.
+        /*
+        Case when operator is entered immediately after an answer was operated, 
+        a will be automatically entered and will equal to the previous answer, 
+        finally, the calculator starts from accepting inputs of operator and b.
+        */
+    }
 
-    if(a === "Infinity") a = 0;
-
-    //operate for answer if the current calculation is followed by another op input.
-    if(a && b && op) {  
+    if(a && b && op) {
         operate();
-        op = input;
-        rawInput += ` ${op} `;
-        inputArr = organizeInput(rawInput);
-        updateDisplay();
-        return;
+        a = answer;
+        op = "";
     }
 
     op = input;
-    rawInput += ` ${op} `;
-    inputArr = organizeInput(rawInput);
-    op = inputArr[inputArr.length-2];
-    
-    updateDisplay();
-    
-    dotEnabled = true; //Switch on dot.
+    rawInput = "";
+    updateMathDisplay();
+    updateInputDisplay();
+
+    dotEnabled = true;
 }
 
-function organizeInput(input) {
-    let arr = input.split(" ");
-    console.log(arr);
-    return arr;
-}
-
-function updateDisplay() {
-    processedInput = `${a} ${op} ${b}`;
-    display.textContent = processedInput;
-}
 
 function operate() {
-    if(!op) op = "+"; //default op to + if op is not input yet.
+    if(!a && !b && !op) return; //Skip if nothing is entered.
+
+    if(a && !op && !b) {
+        b = a;
+        a = 0
+        op = "+"; //default op to + if op is not input yet.
+    }
 
     if(b === 0 && op === "/") answer = "Infinity, ⚠️Dividing by 0 not possible!"; //avoid divided by 0.
     answer = methods[op](+a, +b);
-    display.textContent = answer;
+    rawInput = answer;
 
-    a = answer;
-    rawInput = String(a); //then rawInput = "a"
-    inputArr.length = 0;
-    organizeInput(rawInput);
+    updateMathDisplay();
+    updateInputDisplay();
+
+    a = "";
     b = "";
     op = "";
 
     dotEnabled = true; //Switch on dot.
+    operated = true;
 
     console.log("Answer: " + answer);
+}
+
+function updateMathDisplay() {
+    let newOp = op;
+    if(op === "*") { //Show * and / in a more readable way.
+        newOp = "×";
+    }else if(op === "/"){
+        newOp = "÷";
+    }
+
+    const math = `${a.toString()} ${newOp} ${b.toString()}`
+    mathDisplay.textContent = math;
+}
+
+function updateInputDisplay() {
+    inputDisplay.textContent = rawInput;
 }
 
 function clearAll() {
     a = 0;
     b = "";
     op = "";
-    answer = "";
+    answer = 0;
     rawInput = "";
-    inputArr.length = 0;
-    updateDisplay();
+    mathDisplay.textContent = "";
+    inputDisplay.textContent = 0;
 
-    console.log(`Cleared, rawInput: ${rawInput}, inputArr: ${rawInput} 
-                 a: ${a}, b: ${b}, op: ${op}.`);
+    inputTarget = "a";
+    operated = false;
+    dotEnabled = true;
+
+
+    console.log(
+    `Cleared!
+    - rawInput: ${rawInput},
+    - a: ${a} 
+    - b: ${b}
+    - op: ${op}`
+    );
 }
-
 
 function CalcData(a, b, op, answer) {
    this.a = a;
