@@ -19,6 +19,7 @@ div#calculator {
 
 div.display {
     border: 3px solid black;
+    border-radius: 0.4rem;
     height: 5em;
     margin: 5px auto;
 }
@@ -37,7 +38,6 @@ div.display {
     height: 70%;
     font-size: 2em;
 }
-
 
 div.buttons {
     width: 400px;
@@ -60,17 +60,6 @@ div.row {
     gap: 3px;
 }
 
-button.digit-effect {
-    background-color: rgb(65, 65, 65);
-}
-
-button.equal-effect {
-    background-color: rgb(112, 112, 112);
-}
-
-button.fnc-effect {
-    background-color: #02a6f1d2;
-}
 
 button {
     border: 3px transparent solid;
@@ -84,6 +73,17 @@ button {
     flex: 1;
 }
 
+button.digit-effect {
+    background-color: rgb(65, 65, 65);
+}
+
+button.equal-effect {
+    background-color: rgb(112, 112, 112);
+}
+
+button.fnc-effect {
+    background-color: #02a6f1d2;
+}
 
 .operator,
 .backspace {

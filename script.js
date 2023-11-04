@@ -12,7 +12,6 @@ let op = "";
 let answer = 0;
 let inputTarget = "a"; //Determine which data is being input, either a or b.
 
-let dotEnabled = true;
 let operated = false;
 
 //Raw string input by user
@@ -91,11 +90,10 @@ function inputDigit(input) {
 
     rawInput += input;
     if(inputTarget == "a") {
-        a = rawInput;
+        a = +rawInput;
     }else {
-        b = rawInput;
+        b = +rawInput;
     }
-
     updateInputDisplay();
 }
 
@@ -104,8 +102,6 @@ function inputDot() {
 
     if(rawInput.includes(".")) return; //Skip if decimal is already entered.
 
-    dotEnabled = false;
-
     if(rawInput === "") { //If user enter decimal to an empty rawInput, it becomes "0.".
         rawInput += "0.";
     }else {
@@ -113,9 +109,9 @@ function inputDot() {
     }    
 
     if(inputTarget == "a") {
-        a = rawInput;
+        a = +rawInput;
     }else {
-        b = rawInput;
+        b = +rawInput;
     }
 
     updateInputDisplay();
@@ -144,8 +140,6 @@ function inputOp(input) {
     rawInput = "";
     updateMathDisplay();
     updateInputDisplay();
-
-    dotEnabled = true;
 }
 
 
@@ -169,19 +163,22 @@ function operate() {
     b = "";
     op = "";
 
-    dotEnabled = true; //Switch on dot.
     operated = true;
 
     console.log("Answer: " + answer);
 }
 
 function removeLast() {
+    if(rawInput == "" || rawInput == "0" || operated) return;
+
     rawInput = rawInput.slice(0, -1); //slice from pos 0 to the last 2nd character.
     if(inputTarget === "a") {
         a = rawInput;
     } else {
         b = rawInput;
     }
+
+    operated = false;
     updateInputDisplay();
 }
 
@@ -212,8 +209,6 @@ function clearAll() {
 
     inputTarget = "a";
     operated = false;
-    dotEnabled = true;
-
 
     console.log(
     `Cleared!
