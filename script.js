@@ -4,6 +4,7 @@ const digitBtn = document.querySelectorAll('button.digit');
 const opBtn = document.querySelectorAll('button.operator');
 const equalBtn = document.querySelector('button.equal');
 const clearBtn = document.querySelector('button.clear');
+const deleteBtn = document.querySelector('button.backspace');
 const dotBtn = document.querySelector('button.dot');
 const historyDisplay = document.querySelector('div.history > ul.list');
 
@@ -31,11 +32,13 @@ const methods = {
 };
 
 //Mouse click handler
-digitBtn.forEach(digit => digit.addEventListener('click', e => inputDigit(e.target.id)));
-opBtn.forEach(operator => operator.addEventListener('click', e => inputOp(e.target.id)));
+digitBtn.forEach(digit => digit.addEventListener('click', () => inputDigit(digit.id)));
+opBtn.forEach(operator => operator.addEventListener('click', () => inputOp(operator.id)));
 dotBtn.addEventListener('click', inputDot);
 equalBtn.addEventListener('click', operate);
 clearBtn.addEventListener('click', clearAll);
+deleteBtn.addEventListener('click',removeLast);
+
 
 //Keydown handler
 window.addEventListener('keydown', e => { 
@@ -53,6 +56,9 @@ window.addEventListener('keydown', e => {
     numberPattern.test(key) || key === "."
         ? button.classList.add('digit-effect')
         : button.classList.add('fnc-effect');
+
+    //Remove Effect when transitioned.
+    button.addEventListener('transitionend', removeEffect);
     
     //Equal
     if(key === "=" || key === "Enter") return operate();
@@ -72,12 +78,6 @@ window.addEventListener('keydown', e => {
     //Backspace or Delete
     if(key === "Backspace") return removeLast();
 });
-
-//Remove Input Effect
-const allButtons = document.querySelectorAll('button');
-allButtons.forEach(button => 
-    button.addEventListener('transitionend', removeEffect)
-);
 
 function removeEffect(e) {
     if(e.propertyName !== "background-color") return;

@@ -150,12 +150,19 @@ button.digit-effect {
     background-color: rgb(65, 65, 65);
 }
 
-button.equal-effect {
-    background-color: rgb(112, 112, 112);
-}
-
 button.fnc-effect {
-    background-color: #02a6f1d2;
+    background-color: rgba(44, 47, 212, 0.788);
 }
 
 
+.digit:hover,
+.dot:hover {
+    background-color: rgb(65, 65, 65);
+}
+
+.operator:hover,
+.equal:hover,
+.clear:hover,
+.backspace:hover {
+    background-color: rgba(44, 47, 212, 0.788);
+}
