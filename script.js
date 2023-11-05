@@ -5,12 +5,14 @@ const opBtn = document.querySelectorAll('button.operator');
 const equalBtn = document.querySelector('button.equal');
 const clearBtn = document.querySelector('button.clear');
 const dotBtn = document.querySelector('button.dot');
+const historyDisplay = document.querySelector('div.history > ul.list');
 
 let a = 0;
 let b = "";
 let op = "";
 let answer = 0;
 let inputTarget = "a"; //Determine which data is being input, either a or b.
+const history = []; //Array of calculation history.
 
 let operated = false;
 
@@ -148,7 +150,6 @@ function inputOp(input) {
     updateInputDisplay();
 }
 
-
 function operate() {
     operated = true;
 
@@ -168,6 +169,8 @@ function operate() {
 
     updateMathDisplay();
     updateInputDisplay();
+
+    logHistory();
 
     a = "";
     b = "";
@@ -228,10 +231,32 @@ function clearAll() {
     );
 }
 
-function CalcData(a, b, op, answer) {
+function logHistory() {
+    history.unshift(new Item(a, b, op, answer));
+    if(history.length > 3) history.pop();
+    console.log(history);
+
+    //Remove all child 
+    while(historyDisplay.firstChild) {
+        historyDisplay.removeChild(historyDisplay.firstChild);
+    }
+    
+    for(let i=0; i < history.length; i++) {
+        let item = document.createElement('li');
+
+        item.setAttribute('id', 'item' + i);
+        item.classList.add('item');
+        item.textContent = `${history[i].a} ${history[i].op} ${history[i].b} = ${history[i].answer}`;
+
+        historyDisplay.appendChild(item);
+    }
+    
+    historyDisplay.firstChild.style.borderColor = "orange";
+}
+
+function Item(a, b, op, answer) {
    this.a = a;
    this.b = b;
    this.op = op;
    this.answer = answer;
 }
-//console.log(new CalcData(15,20,"*"));
