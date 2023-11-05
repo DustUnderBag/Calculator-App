@@ -15,9 +15,9 @@ let inputTarget = "a"; //Determine which data is being input, either a or b.
 let operated = false;
 
 //Raw string input by user
-let rawInput = "";
+let rawInput = "0";
 mathDisplay.textContent = "";
-inputDisplay.textContent = 0;
+inputDisplay.textContent = rawInput;
 
 const methods = {
     "+": function(a, b) {
@@ -86,9 +86,12 @@ function removeEffect(e) {
 }
 
 function inputDigit(input) {
-    if(operated) clearAll();
+    if(operated) clearAll(); //Reset if digit input follows an operated answer.
 
-    rawInput += input;
+    rawInput =="0" 
+        ? rawInput = input //If rawInput = 0, new input replaces the "0".
+        :rawInput += input; //else, just add new input to the rawInput.
+
     if(inputTarget == "a") {
         a = +rawInput;
     }else {
@@ -100,12 +103,12 @@ function inputDigit(input) {
 function inputDot() {
     if(operated) clearAll();
 
-    if(rawInput.includes(".")) return; //Skip if decimal is already entered.
+    if(rawInput.toString().includes(".")) return; //Skip if decimal is already entered.
 
     if(rawInput === "") { //If user enter decimal to an empty rawInput, it becomes "0.".
         rawInput += "0.";
     }else {
-        rawInput += ".";
+        rawInput += "."; //Else just add "." to the rawInput.
     }    
 
     if(inputTarget == "a") {
@@ -119,21 +122,24 @@ function inputDot() {
 
 function inputOp(input) {
     inputTarget = "b";
+
     if(operated) {  
+        /*If an operator is entered right after an operation, 
+        the calculator assigns the answer to a and waits for b. */
         a = answer;
         b = "";
+
         operated = false; //reverts to non-operated state.
-        /*
-        Case when operator is entered immediately after an answer was operated, 
-        a will be automatically entered and will equal to the previous answer, 
-        finally, the calculator starts from accepting inputs of operator and b.
-        */
     }
 
-    if(a && b && op) {
+    if(a && b && op) { 
+         /*If an operator is entered after a completed input of a,b,op, 
+         the calculator will operate for answer first, 
+         then assign answer to a, and assign input to op. Finally, it waits for b */
         operate();
         a = answer;
-        op = "";
+
+        operated = false; //reverts to non-operated state.
     }
 
     op = input;
@@ -144,6 +150,8 @@ function inputOp(input) {
 
 
 function operate() {
+    operated = true;
+
     if(!a && !b && !op) return; //Skip if nothing is entered.
 
     if(a && !op && !b) {
@@ -152,8 +160,10 @@ function operate() {
         op = "+"; //default op to + if op is not input yet.
     }
 
-    if(b === 0 && op === "/") answer = "Infinity, ⚠️Dividing by 0 not possible!"; //avoid divided by 0.
-    answer = methods[op](+a, +b);
+    answer = (b === 0 && op === "/")
+    ? "⚠️Can't Divided by zero!" //Error if divided by 0.
+    :  methods[op](+a, +b); //else operate for answer.
+
     rawInput = answer;
 
     updateMathDisplay();
@@ -163,15 +173,14 @@ function operate() {
     b = "";
     op = "";
 
-    operated = true;
-
     console.log("Answer: " + answer);
 }
 
 function removeLast() {
-    if(rawInput == "" || rawInput == "0" || operated) return;
-
+    if(rawInput == "0" || operated) return;
     rawInput = rawInput.slice(0, -1); //slice from pos 0 to the last 2nd character.
+    if(rawInput == "") rawInput = 0;
+
     if(inputTarget === "a") {
         a = rawInput;
     } else {
