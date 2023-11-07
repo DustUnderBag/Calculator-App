@@ -89,7 +89,7 @@ function removeEffect(e) {
 
 function inputDigit(input) {
     if(operated) clearAll(); //Reset if digit input follows an operated answer.
-
+    if(rawInput.length >= 17) return; //Avoid rawInput being too long.
     rawInput =="0" 
         ? rawInput = input //If rawInput = 0, new input replaces the "0".
         :rawInput += input; //else, just add new input to the rawInput.
@@ -145,7 +145,8 @@ function inputOp(input) {
     }
 
     op = input;
-    rawInput = "";
+    rawInput = "0";
+
     updateMathDisplay();
     updateInputDisplay();
 }
@@ -154,11 +155,14 @@ function operate() {
     operated = true;
 
     if(!a && !b && !op) return; //Skip if nothing is entered.
-
     if(a && !op && !b) {
         b = a;
         a = 0
         op = "+"; //default op to + if op is not input yet.
+    }
+
+    if(a && op && !b) { //If b isn't entered.
+        b = 0;
     }
 
     answer = (b === 0 && op === "/")
@@ -245,13 +249,33 @@ function logHistory() {
         let item = document.createElement('li');
 
         item.setAttribute('id', 'item' + i);
+        history[i].id = item.id; //Current data obj's id = current list item's id.
         item.classList.add('item');
         item.textContent = `${history[i].a} ${history[i].op} ${history[i].b} = ${history[i].answer}`;
-
         historyDisplay.appendChild(item);
+
+        item.addEventListener('click', restoreHistory);
     }
     
     historyDisplay.firstChild.style.borderColor = "orange";
+}
+
+function restoreHistory() {
+    clearAll();
+
+    let index = this.id.slice(-1);
+    console.log(index);
+
+    operated = false;
+    a = history[index].a;
+    b = history[index].b;
+    op = history[index].op;
+    answer = history[index].answer;
+    operated = true;
+
+    rawInput = answer;
+    updateMathDisplay();
+    updateInputDisplay();
 }
 
 function Item(a, b, op, answer) {
