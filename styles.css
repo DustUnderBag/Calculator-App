@@ -14,14 +14,8 @@ html {
 body {
     width: 100vh;
     height: 100vh;
-    padding: 10% auto;
     margin: 0 auto;
 }
-
-h1 {
-    margin: 1rem auto;
-    color:red;
-}   
 
 div#calculator {
     width: 40%;
