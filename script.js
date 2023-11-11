@@ -7,6 +7,7 @@ const clearBtn = document.querySelector('button.clear');
 const deleteBtn = document.querySelector('button.backspace');
 const dotBtn = document.querySelector('button.dot');
 const historyDisplay = document.querySelector('div.history > ul.list');
+const clearHistoryBtn = document.querySelector('button.clear-history');
 
 let a = 0;
 let b = "";
@@ -36,11 +37,9 @@ digitBtn.forEach(digit => digit.addEventListener('click', () => inputDigit(digit
 opBtn.forEach(operator => operator.addEventListener('click', () => inputOp(operator.id)));
 dotBtn.addEventListener('click', inputDot);
 equalBtn.addEventListener('click', operate);
-clearBtn.addEventListener('click', ()=> {
-    clearAll();
-    return clearHistory();
-});
+clearBtn.addEventListener('click', clearAll);
 deleteBtn.addEventListener('click',removeLast);
+clearHistoryBtn.addEventListener('click', clearHistory);
 
 //Keydown handler
 window.addEventListener('keydown', handleKeyboardInput);
@@ -77,10 +76,7 @@ function handleKeyboardInput(e) {
     if(opPattern.test(key)) return inputOp(key);
 
     //Clear or Escape
-    if(key === "Escape") {
-        clearAll();
-        return clearHistory();
-    }
+    if(key === "Escape") return  clearAll();
 
     //Backspace or Delete
     if(key === "Backspace") return removeLast();
@@ -172,10 +168,8 @@ function operate() {
     }
 
     answer = (b === 0 && op === "/")
-    ? "⚠️Can't Divided by zero!" //Error if divided by 0.
-    :  methods[op](+a, +b); //else operate for answer.
-
-    answer = roundNumber(answer);
+    ? "⚠️No divided by 0!" //Error if divided by 0.
+    :  roundNumber(methods[op](+a, +b)); //else operate for answer.
 
     rawInput = answer;
 
@@ -207,7 +201,9 @@ function removeLast() {
 }
 
 function roundNumber(number) {
-    return Math.round(number * 1000) / 1000 ;
+    return (typeof number === "number")
+    ? Math.round(number * 1000) / 1000 
+    : number;
 }
 
 function updateMathDisplay() {

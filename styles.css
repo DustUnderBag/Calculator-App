@@ -47,7 +47,7 @@ div.display {
 
 .display .math {
     height: 30%;
-    font-size: 1rem;
+    font-size: 1.1rem;
 }
 
 .display .input {
@@ -112,7 +112,7 @@ button {
 }
 
 .history > ul {
-    height: 80%;
+    height: 180px;
     margin-top: 0.5rem;
     list-style: none;
 
@@ -127,12 +127,11 @@ button {
 .list > li.item {
     width: 90%;
     height: 25%;
-
     border: 3px solid transparent;
-    padding: 6px 0;
+    padding: 6px 1rem;
     border-radius: 0.4rem;
-
-    font-size: 1.5rem;
+    text-align: center;
+    font-size: 1.25rem;
     font-weight: bold;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.116);
 }
@@ -142,6 +141,27 @@ li.item:hover {
     box-shadow: 5px 5px 15px #02a5f181;
 }
 
+button.clear-history {
+    border: 3px black solid;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    color: black;
+    font-size: 1.25rem;
+
+    transition: all 100ms ease-in;
+
+    background: linear-gradient(0deg, rgba(73,50,89,1) 0%, rgba(255,86,86,1) 100%);
+    background-size: 100% 0;
+    background-repeat:no-repeat;
+    background-position: bottom;
+}
+
+button.clear-history:hover {
+    color: white;
+    background-size: 100% 100%;
+}
+
 button.digit-effect {
     background-color: rgb(65, 65, 65);
 }
@@ -149,7 +169,6 @@ button.digit-effect {
 button.fnc-effect {
     background-color: rgba(44, 47, 212, 0.788);
 }
-
 
 .digit:hover,
 .dot:hover {
@@ -161,4 +180,27 @@ button.fnc-effect {
 .clear:hover,
 .backspace:hover {
     background-color: rgba(44, 47, 212, 0.788);
+}
+
+
+footer {
+    margin-bottom: 0;
+    margin-top: 100px;
+}
+
+.git-link {
+    transition: background-size 100ms;
+    background: linear-gradient(90deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 68%);   
+    background-size: 0 3px;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    
+    /* Basic look */
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.git-link:hover {
+    background-size: 100% 3px;
 }
