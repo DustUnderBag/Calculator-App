@@ -36,12 +36,16 @@ digitBtn.forEach(digit => digit.addEventListener('click', () => inputDigit(digit
 opBtn.forEach(operator => operator.addEventListener('click', () => inputOp(operator.id)));
 dotBtn.addEventListener('click', inputDot);
 equalBtn.addEventListener('click', operate);
-clearBtn.addEventListener('click', clearAll);
+clearBtn.addEventListener('click', ()=> {
+    clearAll();
+    return clearHistory();
+});
 deleteBtn.addEventListener('click',removeLast);
 
-
 //Keydown handler
-window.addEventListener('keydown', e => { 
+window.addEventListener('keydown', handleKeyboardInput);
+
+function handleKeyboardInput(e) {
     let key = e.key;
     if(key === "Enter") key = "="; //Convert "Enter" to "=" so both can refer to equalBtn.
     const button = document.getElementById(key);
@@ -73,15 +77,17 @@ window.addEventListener('keydown', e => {
     if(opPattern.test(key)) return inputOp(key);
 
     //Clear or Escape
-    if(key === "Escape") return clearAll();
+    if(key === "Escape") {
+        clearAll();
+        return clearHistory();
+    }
 
     //Backspace or Delete
     if(key === "Backspace") return removeLast();
-});
+}
 
 function removeEffect(e) {
     if(e.propertyName !== "background-color") return;
-    //console.log(e);
     this.classList.remove('digit-effect');
     this.classList.remove('fnc-effect');
     this.classList.remove('equal-effect');
@@ -169,6 +175,8 @@ function operate() {
     ? "⚠️Can't Divided by zero!" //Error if divided by 0.
     :  methods[op](+a, +b); //else operate for answer.
 
+    answer = roundNumber(answer);
+
     rawInput = answer;
 
     updateMathDisplay();
@@ -198,20 +206,30 @@ function removeLast() {
     updateInputDisplay();
 }
 
-function updateMathDisplay() {
-    let newOp = op;
-    if(op === "*") { //Show * and / in a more readable way.
-        newOp = "×";
-    }else if(op === "/"){
-        newOp = "÷";
-    }
+function roundNumber(number) {
+    return Math.round(number * 1000) / 1000 ;
+}
 
-    const math = `${a.toString()} ${newOp} ${b.toString()}`
+function updateMathDisplay() {
+    const math = `${a.toString()} ${convertOp(op)} ${b.toString()}`
     mathDisplay.textContent = math;
 }
 
 function updateInputDisplay() {
     inputDisplay.textContent = rawInput;
+}
+
+function convertOp(op) {
+    switch(op) {
+        case "*":
+            return "×";
+            break;
+        case "/":
+            return "÷";
+            break;
+        default:
+            return op;
+    }
 }
 
 function clearAll() {
@@ -236,14 +254,11 @@ function clearAll() {
 }
 
 function logHistory() {
-    history.unshift(new Item(a, b, op, answer));
+    history.unshift(new Item(a, b, op, answer)); //Insert new calculation to the start of array.
     if(history.length > 3) history.pop();
-    console.log(history);
 
     //Remove all child 
-    while(historyDisplay.firstChild) {
-        historyDisplay.removeChild(historyDisplay.firstChild);
-    }
+    removeAllChild(historyDisplay);
     
     for(let i=0; i < history.length; i++) {
         let item = document.createElement('li');
@@ -251,7 +266,7 @@ function logHistory() {
         item.setAttribute('id', 'item' + i);
         history[i].id = item.id; //Current data obj's id = current list item's id.
         item.classList.add('item');
-        item.textContent = `${history[i].a} ${history[i].op} ${history[i].b} = ${history[i].answer}`;
+        item.textContent = `${history[i].a} ${convertOp(history[i].op)} ${history[i].b} = ${history[i].answer}`;
         historyDisplay.appendChild(item);
 
         item.addEventListener('click', restoreHistory);
@@ -261,10 +276,8 @@ function logHistory() {
 }
 
 function restoreHistory() {
-    clearAll();
-
-    let index = this.id.slice(-1);
-    console.log(index);
+    //Return last digit char from id of selected list's item(item0, item1, item2...)
+    let index = this.id.slice(-1); 
 
     operated = false;
     a = history[index].a;
@@ -272,10 +285,22 @@ function restoreHistory() {
     op = history[index].op;
     answer = history[index].answer;
     operated = true;
+    inputTarget = "a"
 
     rawInput = answer;
     updateMathDisplay();
     updateInputDisplay();
+}
+
+function clearHistory(){
+    history.length = 0;
+    removeAllChild(historyDisplay);
+}
+
+function removeAllChild(parent) {
+    while(parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
 }
 
 function Item(a, b, op, answer) {
@@ -284,3 +309,4 @@ function Item(a, b, op, answer) {
    this.op = op;
    this.answer = answer;
 }
+
