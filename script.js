@@ -168,7 +168,7 @@ function operate() {
     }
 
     answer = (b === 0 && op === "/")
-    ? "⚠️No divided by 0!" //Error if divided by 0.
+    ? "⚠️No division by 0!" //Error if divided by 0.
     :  roundNumber(methods[op](+a, +b)); //else operate for answer.
 
     rawInput = answer;
